@@ -10,7 +10,27 @@ module.exports = {
     container: {
       center: true,
     },
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ["Poppins", "sans-serif"],
+      },
+      colors: {
+        theme: {
+          primary: "#A663CC",
+          primaryVariant: "#",
+          secondary: "#EF7B45",
+          secondaryVariant: "#",
+          background: "#171D1C",
+          surface: "#303633",
+          // error: "",
+          onPrimary: "#",
+          onSecondary: "#",
+          onBackground: "#F1F5F2",
+          onSurface: "#F1F5F2",
+          // onError: ""
+        }
+      },
+    },
   },
   plugins: [],
 }

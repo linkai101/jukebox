@@ -1,5 +1,8 @@
 import Head from 'next/head';
 
+import Timeline from '../components/Timeline';
+import AuthSection from '../components/AuthSection';
+
 export default function Home() {
   return <>
     <Head>
@@ -7,18 +10,28 @@ export default function Home() {
       <meta name="description" content="" />
     </Head>
 
-    <main>
-      <div className="container px-8 py-8">
-        <h1 className="text-3xl">next-tailwind-starter <span className="text-lg text-gray-400">v1</span></h1>
-        <p className="text-md">
-          by <a href="https://github.com/linkai101" className="font-bold text-blue-500 hover:underline" target="_blank">@linkai101</a>
-        </p>
+    <div className="container max-w-6xl flex">
+      <nav className="sticky top-0 h-screen pl-6 pr-10 py-4 flex flex-col gap-8">
+        <h1 className="text-2xl font-extrabold">Jukebox</h1>
 
-        <p className="mt-4">
-          A starter Next.js project installed with TypeScript and Tailwind.
-        </p>
+        <ul className="flex flex-col gap-3 text-lg">
+          <li>
+            Timeline
+          </li>
+          <li>
+            Timeline
+          </li>
+        </ul>
+      </nav>
+
+      <main className="flex-1 h-[3000px] border-x border-theme-surface">
+        <Timeline/>
+      </main>
+
+      <div className="sticky top-0">
+        <AuthSection/>
       </div>
-    </main>
+    </div>
 
     <footer>
     </footer>
