@@ -8,18 +8,23 @@ import { FiX } from 'react-icons/fi';
 interface SignupModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  // signup: (email: string, password: string) => void;
+  signup: (name: string, email: string, password: string) => void;
   signInWithGoogle: () => void;
 }
 
-export default function SignupModal({ open, setOpen,/* signup, */ signInWithGoogle }: SignupModalProps) {
+export default function SignupModal({ open, setOpen, signup, signInWithGoogle }: SignupModalProps) {
   const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [password2, setPassword2] = React.useState('');
 
   function handleSignup(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    // login(email, password);
+    if (password !== password2) {
+      // TODO: warn passwords aren't the same
+      return;
+    }
+    signup(name, email, password);
   }
 
   function handleModalClose() {
@@ -74,6 +79,15 @@ export default function SignupModal({ open, setOpen,/* signup, */ signInWithGoog
                       name="password" type="password"
                       className="px-3 py-1.5 rounded-md bg-theme-surface/50"
                       value={password} onChange={e => setPassword(e.target.value)}
+                    />
+                  </div>
+                  
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="password2" className="text-sm">Confirm Password</label>
+                    <input
+                      name="password2" type="password"
+                      className="px-3 py-1.5 rounded-md bg-theme-surface/50"
+                      value={password2} onChange={e => setPassword2(e.target.value)}
                     />
                   </div>
 

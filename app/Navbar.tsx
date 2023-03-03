@@ -1,15 +1,24 @@
+"use client";
+
 import React from 'react';
+import { useRouter } from 'next/navigation';
 
 import { firebase } from 'lib/firebaseClient';
 import {
   signOut
 } from "firebase/auth";
 
-export default function Navbar({ user, loadingUser }: { user: firebase.User | null, loadingUser: boolean }) {
+import { FiLogOut } from 'react-icons/fi';
+
+import User from 'types/User';
+
+export default function Navbar({ user }: { user: User | null }) {
+  const router = useRouter();
 
   async function handleSignOut() {
     await signOut(firebase.auth()).then(() => {
       // Sign-out successful.
+      router.refresh(); // reload page
     }).catch(err => {
       console.error(err.message + " (" + err.code + ")");
     });
@@ -30,19 +39,17 @@ export default function Navbar({ user, loadingUser }: { user: firebase.User | nu
         </ul>
       </div>
       
-      {user && <div>
-        <p className="text-sm">
-          Logged in as:
-        </p>
-        <p className="text-sm font-bold">
-          {user.displayName}
-        </p>
+      {user && <div className="flex items-center gap-2">
+        <img
+          src={user.photoURL || ''}
+          className="w-12 h-12 rounded-full"
+        />
 
         <button
-          className="px-2 py-0.5 text-sm font-bold bg-theme-onBackground text-theme-background rounded-md mt-2"
+          className="p-2 text-sm rounded-full hover:bg-theme-surface duration-300"
           onClick={handleSignOut}
         >
-          Logout
+          <FiLogOut className='text-xl stroke-[3px]'/>
         </button>
       </div>}
     </nav>
