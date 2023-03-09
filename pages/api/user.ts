@@ -2,18 +2,24 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import { firebaseAdmin } from 'lib/firebaseAdmin';
 
-export default async function handler(req:NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const auth = firebaseAdmin.auth();
   const firebase = firebaseAdmin.firestore();
-  const { method } = req;
+  const { method, headers } = req;
+  const token = headers.token;
+
+  if (!token) {
+    res.status(405).json({ error: 'No token provided' });
+    return;
+  }
 
   switch (method) {
     case 'GET':
       try {
-        const { token, includeProfile } = req.query;
         // only user can read their own data
-        const decodedToken = await firebaseAdmin.auth().verifyIdToken(token as string);
+        const decodedToken = await auth.verifyIdToken(token as string);
         const { uid } = decodedToken;
-        const authData = await firebaseAdmin.auth().getUser(uid);
+        const authData = await auth.getUser(uid);
 
         // const profile = await firebase.collection('users').doc(uid).get();
         res.status(200).json({

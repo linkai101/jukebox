@@ -9,9 +9,17 @@ import User from 'types/User';
 async function fetchUser() {
   try {
     const token = cookies().get('token');
+
+    if (!token?.value) {
+      return null;
+    }
   
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${token?.value}`, {
+    // const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${token?.value}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user`, {
       method: 'GET',
+      headers: {
+        token: token?.value
+      }
     });
     return await res.json();
   } catch(e) {
