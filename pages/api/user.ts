@@ -17,9 +17,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'GET':
       try {
         // only user can read their own data
-        const decodedToken = await firebaseAdmin.auth().verifyIdToken(token as string);
+        const decodedToken = await auth.verifyIdToken(token as string);
         const { uid } = decodedToken;
-        const authData = await firebaseAdmin.auth().getUser(uid);
+        const authData = await auth.getUser(uid);
 
         // const profile = await firebase.collection('users').doc(uid).get();
         res.status(200).json({
