@@ -2,25 +2,54 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import { firebaseAdmin } from 'lib/firebaseAdmin';
 
-export default async function handler(req: NextApiRequest, res: NextAPIResponse) {
-  const auth = firebaseAdmin.auth()
-  const store = firebaseAdmin.firestore()
-  const { method, cookies } = req
-  const token = cookies.token
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const auth = firebaseAdmin.auth();
+  const firebase = firebaseAdmin.firestore();
+  const { method, headers } = req;
+  const token = headers.token;
 
-  let uid;
-  try {
-    const verifiedToken = await auth.verifyIdToken(token)
-    uid = verifiedToken.uid
-  } catch(e) {
-    res.status(405).json(e)
-    return
+  if (!token) {
+    res.status(405).json({ error: 'No token provided' });
+    return;
   }
 
-  switch(method) {
+  switch (method) {
     case 'GET':
-      const userdata = store.collection('users').doc(uid).get().data()
-      res.status(200).json(userdata) // TODO: Only send what is necessary
-      break
+      try {
+        // only user can read their own data
+        const decodedToken = await firebaseAdmin.auth().verifyIdToken(token as string);
+        const { uid } = decodedToken;
+        const authData = await firebaseAdmin.auth().getUser(uid);
+
+        // const profile = await firebase.collection('users').doc(uid).get();
+        res.status(200).json({
+          // profile: profile.data(),
+          ...authData
+        });
+      }
+      catch (e) {
+        // token didn't exist or verification failed
+        res.status(405).json(e);
+      }
+      break;
+    // case 'POST':
+    //   try {
+    //     const { token, user } = req.query;
+    //     // only user can update their own data
+    //     const decodedToken = await firebaseAdmin.auth().verifyIdToken(token as string);
+    //     const { uid } = decodedToken;
+
+    //     await firebase.collection('users').doc(uid).set(user);
+    //     res.status(200).json({ user });
+    //   }
+    //   catch (e) {
+    //     // token didn't exist or verification failed
+    //     res.status(405).json(e);
+    //   }
+    //   break;
+    default:
+      res.setHeader("Allow", ["GET"/*, "POST"*/]);
+      res.status(405).end(`Method ${method} Not Allowed`);
+      break;
   }
 }
