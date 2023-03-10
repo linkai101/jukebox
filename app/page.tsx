@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 
 import Navbar from './Navbar';
+import Landing from './Landing';
 import Timeline from './Timeline';
 import AuthPanel from './AuthPanel';
 
@@ -14,7 +15,6 @@ async function fetchUser() {
       return null;
     }
   
-    // const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${token?.value}`, {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user`, {
       method: 'GET',
       headers: {
@@ -38,8 +38,12 @@ export default async function Home() {
         // loadingUser={loadingUser}
       />
 
-      <main className="flex-1 h-[3000px] border-x border-theme-surface">
-        <Timeline/>
+      <main className="flex-1 border-x border-theme-surface">
+        {user ?
+          <Timeline/>
+        :
+          <Landing/>
+        }
       </main>
 
       <div className="sticky top-0 h-screen">

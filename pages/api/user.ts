@@ -20,6 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const decodedToken = await auth.verifyIdToken(token as string);
         const { uid } = decodedToken;
         const authData = await auth.getUser(uid);
+        console.log(uid)
 
         // const profile = await firebase.collection('users').doc(uid).get();
         res.status(200).json({

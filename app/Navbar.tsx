@@ -46,7 +46,7 @@ export default function Navbar({ user }: { user: User | null }) {
         />
 
         <button
-          className="p-2 text-sm rounded-full hover:bg-theme-surface duration-300"
+          className="p-2 text-sm rounded-full hover:bg-theme-surface/50 duration-300"
           onClick={handleSignOut}
         >
           <FiLogOut className='text-xl stroke-[3px]'/>
